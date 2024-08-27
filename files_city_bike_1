@@ -1,0 +1,54 @@
+from pathlib import Path
+
+def load_file(fileName):
+    try: 
+        path= Path(__file__).resolve().parent
+        path = path / fileName
+        contents = path.read_text(encoding="UTF-8")
+        lines = contents.splitlines()[1:]
+        return lines
+    
+    except FileNotFoundError:
+        return None
+
+def show_statistics(lines):
+    if lines is None: 
+        return None
+    else: 
+        distanceInMeter = 0
+        sumDuration = 0
+        ridesCount = 0
+
+        for line in lines: 
+            fields = line.split(",") # ask teachers why didnt it work woth ";"
+            if len(fields) >= 8: 
+                distanceInMeter += int(fields[6])
+                sumDuration += int(fields[7])
+                ridesCount += 1
+        
+        if ridesCount > 0: 
+            distanceInKm = float(distanceInMeter/1000)
+            sumDurationInMin = float(sumDuration/60)
+            
+            avDistance = distanceInKm/ridesCount
+            avDuration = sumDurationInMin/ridesCount
+
+            output = f"\n{distanceInKm:.0f} kilometers on {ridesCount} bike rides\nAverage distance: {avDistance:.1f} kilometers\nAverage duration: {avDuration:.0f} minutes"
+
+            return output
+        else: 
+            return None    
+
+def main():
+    fileName = input("Enter file name: ")
+    try:
+        results = load_file(fileName)
+        if results:
+            print(show_statistics(results))
+        else: 
+            print(f"\nThe file {fileName} is not found")
+    except FileNotFoundError:
+        print(f"\nThe file {fileName} is not found")
+
+if __name__ == "__main__":
+    main()

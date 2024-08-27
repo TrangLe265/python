@@ -1,0 +1,21 @@
+from urllib.request import urlopen 
+url = "https://www.mit.edu/~ecprice/wordlist.10000" 
+content = urlopen(url).read().decode("UTF-8") 
+content = content.strip()
+
+letter_count = {}
+occurence = 1
+
+for letter in content:
+    letter = letter.lower()
+    
+    if letter.isalpha(): 
+        if letter not in letter_count:
+            for i in range(1,len(content)):
+                if content[i] == letter: 
+                    occurence += 1
+            letter_count[letter] = occurence 
+            occurence = 0   
+
+for letter, occurence in sorted(letter_count.items()):
+    print(f"{letter}: {occurence}")
